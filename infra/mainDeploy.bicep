@@ -1,1 +1,1 @@
-targetScope = 'tenant'
+// main script deployment 
