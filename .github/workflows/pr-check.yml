@@ -1,0 +1,32 @@
+name: PR Check
+
+#    this workflow will run when a PR is opened, synchronized or reopened that is targeting the main or dev branch
+on:
+    pull_request:
+        branches:
+            [
+                'main',
+                dev
+            ]
+
+jobs:
+    # this job will run on the latest ubuntu runner 
+    build-and-test:
+        runs-on: ubuntu-latest
+        # this step will checkout the repo code so the workflow can access it
+        steps:
+        - uses: actions/checkout@v3
+        # Installs the latest version of .NET SDK that is 8.0.x
+        - name: Set up .NET
+          uses: actions/setup-dotnet@v3
+          with:
+            dotnet-version: 8.0.x
+        # this step will download and install all NuGet dependencies for the project
+        - name: Restore
+          run: dotnet restore
+        # this step builds the project in Release mode and skips the restore step, since it was already done in the restore step
+        - name: Build
+          run: dotnet build --no-restore --configuration Release
+        # this step will run the unit tests for the project and skips the build step, since it was already done in the build step
+        - name: Test
+          run: dotnet test --no-build --verbosity normal
