@@ -16,6 +16,13 @@ jobs:
         # this step will checkout the repo code so the workflow can access it
         steps:
         - uses: actions/checkout@v3
+        
+        # Initialize CodeQL for C#
+        - name: Initialize CodeQL
+          uses: github/codeql-action/init@v2
+          with:
+            languages: csharp
+
         # Installs the latest version of .NET SDK that is 8.0.x
         - name: Set up .NET
           uses: actions/setup-dotnet@v3
@@ -27,6 +34,11 @@ jobs:
         # this step builds the project in Release mode and skips the restore step, since it was already done in the restore step
         - name: Build
           run: dotnet build --no-restore --configuration Release
+
+        # Run CodeQL analysis
+        - name: Run CodeQL
+          uses: github/codeql-action/analyze@v2
+          
         # this step will run the unit tests for the project and skips the build step, since it was already done in the build step
         - name: Test
           run: dotnet test --no-build --verbosity normal
