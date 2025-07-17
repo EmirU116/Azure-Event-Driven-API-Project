@@ -40,5 +40,5 @@ jobs:
           uses: github/codeql-action/analyze@v2
           
         # this step will run the unit tests for the project and skips the build step, since it was already done in the build step
-        - name: Test
-          run: dotnet test --no-build --verbosity normal
+        - name: Test with code coverage
+          run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Threshold=80 /p:ThresholdType=line
